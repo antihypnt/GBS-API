@@ -3,8 +3,21 @@ from fastapi import FastAPI
 import datetime as dt
 from datetime import timedelta
 import schoolmeal
+import uvicorn
+from starlette.middleware.cors import CORSMiddleware
+
+origins = ["*"]
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 get_school_code("경기")
 
 
@@ -43,3 +56,6 @@ async def meal(mealmode: int):
     elif mealmode == 3 or mealmode == 7: return {"schoolmeal": mealList[2]}
     elif mealmode == 4 or mealmode == 8: return {"schoolmeal": mealList}
     else: return {"schoolmeal": "유효한 값이 아닙니다."}
+
+if __name__ == '__main__':
+    uvicorn.run(app, port=8000, host='0.0.0.0')
